@@ -101,6 +101,7 @@ public class Succes extends javax.swing.JFrame
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         updateBtn = new javax.swing.JButton();
+        deleteBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -174,25 +175,39 @@ public class Succes extends javax.swing.JFrame
             }
         });
 
+        deleteBtn.setText("Delete");
+        deleteBtn.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                deleteBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(35, 35, 35)
+                .addGap(21, 21, 21)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(saveBtn)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(nameLabel)
-                        .addComponent(jLabel2)
-                        .addComponent(jLabel3)
-                        .addComponent(jLabel4)
-                        .addComponent(jLabel5)))
-                .addGap(30, 30, 30)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(nameLabel)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5))
+                        .addGap(30, 30, 30))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(saveBtn)
+                        .addGap(18, 18, 18)
                         .addComponent(updateBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(deleteBtn)
+                        .addGap(18, 18, 18)
                         .addComponent(resetBtn))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -206,7 +221,7 @@ public class Succes extends javax.swing.JFrame
                     .addComponent(name)
                     .addComponent(subject, 0, 156, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 722, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 681, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -237,7 +252,8 @@ public class Succes extends javax.swing.JFrame
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveBtn)
                     .addComponent(resetBtn)
-                    .addComponent(updateBtn))
+                    .addComponent(updateBtn)
+                    .addComponent(deleteBtn))
                 .addContainerGap(32, Short.MAX_VALUE))
             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
@@ -422,6 +438,29 @@ public class Succes extends javax.swing.JFrame
         }
     }//GEN-LAST:event_updateBtnActionPerformed
 
+    private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_deleteBtnActionPerformed
+    {//GEN-HEADEREND:event_deleteBtnActionPerformed
+       try
+       {
+           Class.forName("org.sqlite.JDBC");
+           String url = "jdbc:sqlite:D:\\Documents\\NetBeansProjects\\JavaSQLITE\\src\\database.db";
+           Connection con = DriverManager.getConnection(url);
+           int row = jTable1.getSelectedRow ();
+           String value = jTable1.getModel ().getValueAt ( row, 0 ).toString ();
+           String query = "DELETE FROM inputdata WHERE sno=" + value;
+           PreparedStatement pst = con.prepareStatement ( query );
+           pst.executeUpdate ();
+           DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+           model.setRowCount(0);
+           show_user();
+           JOptionPane.showMessageDialog(null, "Delete OK");
+       }
+       catch (Exception e)
+       {
+           JOptionPane.showMessageDialog ( null, e );
+       }
+    }//GEN-LAST:event_deleteBtnActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -471,6 +510,7 @@ public class Succes extends javax.swing.JFrame
     private javax.swing.JTextField address;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox coreJava;
+    private javax.swing.JButton deleteBtn;
     private javax.swing.JRadioButton female;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
