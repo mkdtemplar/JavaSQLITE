@@ -1,7 +1,9 @@
 
+import java.awt.*;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 import java.util.ArrayList;
@@ -19,7 +21,8 @@ import javax.swing.table.*;
 public class Succes extends javax.swing.JFrame
 {
     String gender;
-    
+    String filename = null;
+    byte[] person_image = null;
     public Succes()
     {
         initComponents();
@@ -43,7 +46,7 @@ public class Succes extends javax.swing.JFrame
             {
                 user = new User ( resultSet.getInt ( "sno" ), resultSet.getString ( "name" ),
                         resultSet.getString ( "address" ), resultSet.getString ( "gender" ),
-                        resultSet.getString ( "knowledge" ), resultSet.getString ( "subject" ));
+                        resultSet.getString ( "knowledge" ), resultSet.getString ( "subject" ), resultSet.getBytes ( "image" ) );
                 usersList.add ( user );
             }
         } 
@@ -102,6 +105,8 @@ public class Succes extends javax.swing.JFrame
         jTable1 = new javax.swing.JTable();
         updateBtn = new javax.swing.JButton();
         deleteBtn = new javax.swing.JButton();
+        lbl_img = new javax.swing.JLabel();
+        imageBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -184,6 +189,15 @@ public class Succes extends javax.swing.JFrame
             }
         });
 
+        imageBtn.setText("Choose Photo");
+        imageBtn.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                imageBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -221,41 +235,56 @@ public class Succes extends javax.swing.JFrame
                     .addComponent(name)
                     .addComponent(subject, 0, 156, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 681, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 681, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lbl_img, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(45, 45, 45)
+                        .addComponent(imageBtn)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nameLabel)
-                    .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(14, 14, 14)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(address, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(19, 19, 19)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(male)
-                    .addComponent(female))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(coreJava)
-                    .addComponent(python))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel5)
-                    .addComponent(subject, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(saveBtn)
-                    .addComponent(resetBtn)
-                    .addComponent(updateBtn)
-                    .addComponent(deleteBtn))
-                .addContainerGap(32, Short.MAX_VALUE))
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbl_img, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(imageBtn)
+                                .addGap(33, 33, 33))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(35, 35, 35)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(nameLabel)
+                            .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(14, 14, 14)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(address, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(19, 19, 19)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(male)
+                            .addComponent(female))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(coreJava)
+                            .addComponent(python))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel5)
+                            .addComponent(subject, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(saveBtn)
+                            .addComponent(resetBtn)
+                            .addComponent(updateBtn)
+                            .addComponent(deleteBtn))))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -266,7 +295,9 @@ public class Succes extends javax.swing.JFrame
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -279,7 +310,7 @@ public class Succes extends javax.swing.JFrame
             Class.forName("org.sqlite.JDBC");
             String url = "jdbc:sqlite:D:\\Documents\\NetBeansProjects\\JavaSQLITE\\src\\database.db";
             Connection con = DriverManager.getConnection(url);
-            String query = "INSERT OR IGNORE INTO inputdata (name, address, gender, knowledge, subject) VALUES(?,?,?,?,?)";
+            String query = "INSERT OR IGNORE INTO inputdata (name, address, gender, knowledge, subject, image) VALUES(?,?,?,?,?,?)";
             PreparedStatement pst = con.prepareStatement(query);
             pst.setString(1, name.getText());
             pst.setString(2, address.getText());
@@ -310,7 +341,7 @@ public class Succes extends javax.swing.JFrame
             String selectedSubject = "";
             selectedSubject = subject.getSelectedItem().toString();
             pst.setString(5, selectedSubject);
-            
+            pst.setBytes (6, person_image );
             pst.executeUpdate();
             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
             model.setRowCount(0);
@@ -382,6 +413,10 @@ public class Succes extends javax.swing.JFrame
                 subject.setSelectedIndex(2);
                 break;
         }
+        
+        byte[] img = userList ().get ( i ).getPicture ();
+        ImageIcon imageIcon = new ImageIcon (new ImageIcon (img).getImage ().getScaledInstance ( lbl_img.getWidth (), lbl_img.getHeight (), Image.SCALE_SMOOTH ));
+        lbl_img.setIcon ( imageIcon );
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void updateBtnActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_updateBtnActionPerformed
@@ -461,6 +496,36 @@ public class Succes extends javax.swing.JFrame
        }
     }//GEN-LAST:event_deleteBtnActionPerformed
 
+    private void imageBtnActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_imageBtnActionPerformed
+    {//GEN-HEADEREND:event_imageBtnActionPerformed
+        JFileChooser fileChooser = new JFileChooser ();
+        fileChooser.showOpenDialog ( null );
+        File file = fileChooser.getSelectedFile ();
+        filename = file.getAbsolutePath ();
+        ImageIcon imageIcon = new ImageIcon (new ImageIcon (filename).getImage ().getScaledInstance ( lbl_img.getWidth (), lbl_img.getHeight (), Image.SCALE_SMOOTH ));
+        lbl_img.setIcon ( imageIcon );
+        try
+        {
+            File image = new File ( filename );
+            FileInputStream fis = new FileInputStream ( image );
+            ByteArrayOutputStream bos = new ByteArrayOutputStream ();
+            byte[] buf = new byte[1024];
+            for ( int i; (i = fis.read (buf)) != -1;)
+            {
+                bos.write ( buf, 0, i );
+            }
+            person_image = bos.toByteArray ();
+        }
+        catch ( FileNotFoundException e )
+        {
+            JOptionPane.showMessageDialog ( null, e );
+        }
+        catch ( IOException e )
+        {
+            JOptionPane.showMessageDialog ( null, e );
+        }
+    }//GEN-LAST:event_imageBtnActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -512,6 +577,7 @@ public class Succes extends javax.swing.JFrame
     private javax.swing.JCheckBox coreJava;
     private javax.swing.JButton deleteBtn;
     private javax.swing.JRadioButton female;
+    private javax.swing.JButton imageBtn;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -519,6 +585,7 @@ public class Succes extends javax.swing.JFrame
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JLabel lbl_img;
     private javax.swing.JRadioButton male;
     private javax.swing.JTextField name;
     private javax.swing.JLabel nameLabel;

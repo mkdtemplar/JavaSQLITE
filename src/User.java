@@ -10,9 +10,14 @@
 class User
 {
     private int sno;
-    private String name, address, gender, knowledge, subject;
+    private String name;
+    private String address;
+    private String gender;
+    private String knowledge;
+    private String subject;
+    private byte[] picture;
 
-    public User(int sno, String name, String address, String gender, String knowledge, String subject)
+    public User ( int sno, String name, String address, String gender, String knowledge, String subject, byte[] picture )
     {
         this.sno = sno;
         this.name = name;
@@ -20,6 +25,7 @@ class User
         this.gender = gender;
         this.knowledge = knowledge;
         this.subject = subject;
+        this.picture = picture;
     }
 
     public int getSno()
@@ -50,5 +56,11 @@ class User
     public String getSubject()
     {
         return subject;
+    }
+    
+    public byte[] getPicture ()
+    {
+        
+        return picture;
     }
 }
