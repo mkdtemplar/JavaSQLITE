@@ -8,6 +8,7 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 import java.text.*;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.table.*;
 
 /*
@@ -47,7 +48,8 @@ public class Succes extends javax.swing.JFrame
             {
                 user = new User ( resultSet.getInt ( "sno" ), resultSet.getString ( "name" ),
                         resultSet.getString ( "address" ), resultSet.getString ( "gender" ),
-                        resultSet.getString ( "knowledge" ), resultSet.getString ( "subject" ), resultSet.getBytes ( "image" ) );
+                        resultSet.getString ( "knowledge" ), resultSet.getString ( "subject" ), resultSet.getBytes ( "image" ),
+                        resultSet.getString ( "date" ) );
                 usersList.add ( user );
             }
         } 
@@ -63,7 +65,7 @@ public class Succes extends javax.swing.JFrame
     {
         ArrayList<User> list = userList ();
         DefaultTableModel model = (DefaultTableModel ) jTable1.getModel ();
-        Object[] row = new Object[6];
+        Object[] row = new Object[7];
         for ( int i = 0; i < list.size (); i++ )
         {
             row[0] = list.get ( i ).getSno ();
@@ -72,6 +74,7 @@ public class Succes extends javax.swing.JFrame
             row[3] = list.get ( i ).getGender ();
             row[4] = list.get ( i ).getKnowledge ();
             row[5] = list.get ( i ).getSubject ();
+            row[6] = list.get ( i ).getDate ();
             model.addRow ( row );
         }
     }
@@ -162,7 +165,7 @@ public class Succes extends javax.swing.JFrame
             },
             new String []
             {
-                "Sno", "Name", "Address", "Gender", "Knowledge", "Subject", "Image", "Date"
+                "Sno", "Name", "Address", "Gender", "Knowledge", "Subject", "Date"
             }
         ));
         jTable1.addMouseListener(new java.awt.event.MouseAdapter()
@@ -359,7 +362,7 @@ public class Succes extends javax.swing.JFrame
             pst.setBytes (6, person_image );
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String date = sdf.format(dateChooser.getDate());
-            
+            pst.setString ( 7, date );
             pst.executeUpdate();
             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
             model.setRowCount(0);
@@ -436,6 +439,16 @@ public class Succes extends javax.swing.JFrame
         byte[] img = userList ().get ( i ).getPicture ();
         ImageIcon imageIcon = new ImageIcon (new ImageIcon (img).getImage ().getScaledInstance ( lbl_img.getWidth (), lbl_img.getHeight (), Image.SCALE_SMOOTH ));
         lbl_img.setIcon ( imageIcon );
+        try
+        {
+            int srow = jTable1.getSelectedRow ();
+            Date date = new SimpleDateFormat ( "yyyy-MM-dd" ).parse ( (String ) model.getValueAt ( srow,6 ));
+            dateChooser.setDate ( date );
+        }
+        catch (Exception e)
+       {
+            JOptionPane.showMessageDialog ( null, e );
+       }
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void updateBtnActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_updateBtnActionPerformed
@@ -447,7 +460,7 @@ public class Succes extends javax.swing.JFrame
             Connection con = DriverManager.getConnection(url);
             int row = jTable1.getSelectedRow ();
             String value = jTable1.getModel ().getValueAt ( row, 0 ).toString ();
-            String query = "UPDATE inputdata SET name=?, address=?, gender=?, knowledge=?, subject=?, image=? WHERE sno=" + value;
+            String query = "UPDATE inputdata SET name=?, address=?, gender=?, knowledge=?, subject=?, image=?, date=? WHERE sno=" + value;
             PreparedStatement pst = con.prepareStatement(query);
             pst.setString(1, name.getText());
             pst.setString(2, address.getText());
@@ -480,7 +493,11 @@ public class Succes extends javax.swing.JFrame
             pst.setString(5, selectedSubject);
             pst.setBytes ( 6, person_image );
     
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String date = sdf.format(dateChooser.getDate());
+            pst.setString ( 7, date );
             pst.executeUpdate();
+            
             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
             model.setRowCount(0);
             show_user();

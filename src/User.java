@@ -16,8 +16,9 @@ class User
     private String knowledge;
     private String subject;
     private byte[] picture;
+    private String date;
 
-    public User ( int sno, String name, String address, String gender, String knowledge, String subject, byte[] picture )
+    public User ( int sno, String name, String address, String gender, String knowledge, String subject, byte[] picture, String date )
     {
         this.sno = sno;
         this.name = name;
@@ -26,6 +27,7 @@ class User
         this.knowledge = knowledge;
         this.subject = subject;
         this.picture = picture;
+        this.date = date;
     }
 
     public int getSno()
@@ -62,5 +64,11 @@ class User
     {
         
         return picture;
+    }
+    
+    public String getDate ()
+    {
+        
+        return date;
     }
 }
