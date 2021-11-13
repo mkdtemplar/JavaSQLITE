@@ -362,6 +362,7 @@ public class Succes extends javax.swing.JFrame
         coreJava.setSelected(false);
         python.setSelected(false);
         subject.setSelectedIndex(0);
+        lbl_img.setIcon ( null );
     }//GEN-LAST:event_resetBtnActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_jTable1MouseClicked
@@ -428,7 +429,7 @@ public class Succes extends javax.swing.JFrame
             Connection con = DriverManager.getConnection(url);
             int row = jTable1.getSelectedRow ();
             String value = jTable1.getModel ().getValueAt ( row, 0 ).toString ();
-            String query = "UPDATE inputdata SET name=?, address=?, gender=?, knowledge=?, subject=? WHERE sno=" + value;
+            String query = "UPDATE inputdata SET name=?, address=?, gender=?, knowledge=?, subject=?, image=? WHERE sno=" + value;
             PreparedStatement pst = con.prepareStatement(query);
             pst.setString(1, name.getText());
             pst.setString(2, address.getText());
@@ -459,6 +460,7 @@ public class Succes extends javax.swing.JFrame
             String selectedSubject = "";
             selectedSubject = subject.getSelectedItem().toString();
             pst.setString(5, selectedSubject);
+            pst.setBytes ( 6, person_image );
     
             pst.executeUpdate();
             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
@@ -475,25 +477,29 @@ public class Succes extends javax.swing.JFrame
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_deleteBtnActionPerformed
     {//GEN-HEADEREND:event_deleteBtnActionPerformed
-       try
-       {
-           Class.forName("org.sqlite.JDBC");
-           String url = "jdbc:sqlite:D:\\Documents\\NetBeansProjects\\JavaSQLITE\\src\\database.db";
-           Connection con = DriverManager.getConnection(url);
-           int row = jTable1.getSelectedRow ();
-           String value = jTable1.getModel ().getValueAt ( row, 0 ).toString ();
-           String query = "DELETE FROM inputdata WHERE sno=" + value;
-           PreparedStatement pst = con.prepareStatement ( query );
-           pst.executeUpdate ();
-           DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-           model.setRowCount(0);
-           show_user();
-           JOptionPane.showMessageDialog(null, "Delete OK");
-       }
-       catch (Exception e)
-       {
-           JOptionPane.showMessageDialog ( null, e );
-       }
+        int opt = JOptionPane.showConfirmDialog ( null, "Are you sre to DELETE", "DELETE", JOptionPane.YES_NO_OPTION );
+        if ( opt == 0 )
+        {
+            try
+            {
+                Class.forName ( "org.sqlite.JDBC" );
+                String url = "jdbc:sqlite:D:\\Documents\\NetBeansProjects\\JavaSQLITE\\src\\database.db";
+                Connection con = DriverManager.getConnection ( url );
+                int row = jTable1.getSelectedRow ();
+                String value = jTable1.getModel ().getValueAt ( row, 0 ).toString ();
+                String query = "DELETE FROM inputdata WHERE sno=" + value;
+                PreparedStatement pst = con.prepareStatement ( query );
+                pst.executeUpdate ();
+                DefaultTableModel model = ( DefaultTableModel ) jTable1.getModel ();
+                model.setRowCount ( 0 );
+                show_user ();
+                JOptionPane.showMessageDialog ( null, "Delete OK" );
+            }
+            catch ( Exception e )
+            {
+                JOptionPane.showMessageDialog ( null, e );
+            }
+        }
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void imageBtnActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_imageBtnActionPerformed
