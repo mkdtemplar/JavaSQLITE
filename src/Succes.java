@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
+import java.text.*;
 import java.util.ArrayList;
 import javax.swing.table.*;
 
@@ -356,6 +357,9 @@ public class Succes extends javax.swing.JFrame
             selectedSubject = subject.getSelectedItem().toString();
             pst.setString(5, selectedSubject);
             pst.setBytes (6, person_image );
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String date = sdf.format(dateChooser.getDate());
+            
             pst.executeUpdate();
             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
             model.setRowCount(0);
