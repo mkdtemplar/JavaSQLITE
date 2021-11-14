@@ -24,10 +24,12 @@ public class Succes extends javax.swing.JFrame
 {
     String gender;
     String filename = null;
-    byte[] person_image = null;
+    byte[] person_image;
     public Succes()
     {
+        this.person_image = null;
         initComponents();
+        setLocationRelativeTo(null);
         show_user();
     }
     
@@ -113,6 +115,10 @@ public class Succes extends javax.swing.JFrame
         imageBtn = new javax.swing.JButton();
         dateChooser = new com.toedter.calendar.JDateChooser();
         jLabel1 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        searchText = new javax.swing.JTextField();
+        sno = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -206,21 +212,24 @@ public class Succes extends javax.swing.JFrame
 
         jLabel1.setText("Date");
 
+        jLabel6.setText("Search");
+
+        jLabel7.setText("Sno");
+
+        searchText.addKeyListener(new java.awt.event.KeyAdapter()
+        {
+            public void keyReleased(java.awt.event.KeyEvent evt)
+            {
+                searchTextKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(saveBtn)
-                        .addGap(18, 18, 18)
-                        .addComponent(updateBtn)
-                        .addGap(18, 18, 18)
-                        .addComponent(deleteBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
-                        .addComponent(resetBtn))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(76, 76, 76)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -247,7 +256,26 @@ public class Succes extends javax.swing.JFrame
                                             .addComponent(female)))
                                     .addComponent(address)
                                     .addComponent(name)
-                                    .addComponent(subject, 0, 156, Short.MAX_VALUE))))))
+                                    .addComponent(subject, 0, 156, Short.MAX_VALUE)))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(saveBtn)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(updateBtn)
+                                .addGap(18, 18, 18)
+                                .addComponent(deleteBtn)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                                .addComponent(resetBtn))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(sno)
+                                    .addComponent(searchText))))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 693, Short.MAX_VALUE)
@@ -302,7 +330,15 @@ public class Succes extends javax.swing.JFrame
                             .addComponent(updateBtn)
                             .addComponent(deleteBtn)
                             .addComponent(resetBtn))))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(searchText, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(22, 22, 22)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sno, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -390,6 +426,7 @@ public class Succes extends javax.swing.JFrame
     {//GEN-HEADEREND:event_jTable1MouseClicked
         int i = jTable1.getSelectedRow();
         TableModel model = jTable1.getModel();
+        sno.setText(model.getValueAt(i, 0).toString());
         name.setText(model.getValueAt(i, 1).toString());
         address.setText(model.getValueAt(i, 2).toString());
         String sex = model.getValueAt(1, 3).toString();
@@ -439,6 +476,7 @@ public class Succes extends javax.swing.JFrame
         byte[] img = userList ().get ( i ).getPicture ();
         ImageIcon imageIcon = new ImageIcon (new ImageIcon (img).getImage ().getScaledInstance ( lbl_img.getWidth (), lbl_img.getHeight (), Image.SCALE_SMOOTH ));
         lbl_img.setIcon ( imageIcon );
+        person_image = img;
         try
         {
             int srow = jTable1.getSelectedRow ();
@@ -458,8 +496,9 @@ public class Succes extends javax.swing.JFrame
             Class.forName("org.sqlite.JDBC");
             String url = "jdbc:sqlite:D:\\Documents\\NetBeansProjects\\JavaSQLITE\\src\\database.db";
             Connection con = DriverManager.getConnection(url);
-            int row = jTable1.getSelectedRow ();
-            String value = jTable1.getModel ().getValueAt ( row, 0 ).toString ();
+            //int row = jTable1.getSelectedRow ();
+            //String value = jTable1.getModel ().getValueAt ( row, 0 ).toString ();
+            String value = sno.getText();
             String query = "UPDATE inputdata SET name=?, address=?, gender=?, knowledge=?, subject=?, image=?, date=? WHERE sno=" + value;
             PreparedStatement pst = con.prepareStatement(query);
             pst.setString(1, name.getText());
@@ -491,7 +530,8 @@ public class Succes extends javax.swing.JFrame
             String selectedSubject = "";
             selectedSubject = subject.getSelectedItem().toString();
             pst.setString(5, selectedSubject);
-            pst.setBytes ( 6, person_image );
+            byte[] img = person_image;
+            pst.setBytes ( 6, img );
     
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String date = sdf.format(dateChooser.getDate());
@@ -567,6 +607,84 @@ public class Succes extends javax.swing.JFrame
         }
     }//GEN-LAST:event_imageBtnActionPerformed
 
+    private void searchTextKeyReleased(java.awt.event.KeyEvent evt)//GEN-FIRST:event_searchTextKeyReleased
+    {//GEN-HEADEREND:event_searchTextKeyReleased
+        try
+        {
+            Class.forName ( "org.sqlite.JDBC" );
+            String url = "jdbc:sqlite:D:\\Documents\\NetBeansProjects\\JavaSQLITE\\src\\database.db";
+            Connection con = DriverManager.getConnection ( url );
+            String sql = "SELECT * FROM inputdata WHERE sno=?";
+            PreparedStatement pst = con.prepareStatement ( sql );
+            pst.setString ( 1, searchText.getText () );
+            ResultSet rs = pst.executeQuery ();
+            if ( rs.next () )
+            {
+                String setId = rs.getString ( "sno" );
+                sno.setText ( setId );
+                String setName = rs.getString ( "name" );
+                name.setText ( setName );
+                String setAddress = rs.getString ( "address" );
+                address.setText ( setAddress );
+                String sex = rs.getString ( "gender" );
+                if (sex.equals("Male"))
+                {
+                    male.setSelected(true);
+                } else
+                {
+                    female.setSelected(true);
+                }
+                
+                String knowledge = rs.getString ( "knowledge" );
+                switch (knowledge)
+                {
+                    case "Java " :
+                        coreJava.setSelected(true);
+                        python.setSelected(false);
+                        break;
+        
+                    case "Python " :
+                        coreJava.setSelected(false);
+                        python.setSelected(true);
+                        break;
+        
+                    default:
+                        coreJava.setSelected(true);
+                        python.setSelected(true);
+                        break;
+                }
+                
+                String subject1 = rs.getString ( "subject" );
+                switch (subject1)
+                {
+                    case "Computer Science" :
+                        subject.setSelectedIndex(0);
+                        break;
+        
+                    case "Humanities" :
+                        subject.setSelectedIndex(1);
+                        break;
+        
+                    case "Engineering" :
+                        subject.setSelectedIndex(2);
+                        break;
+                }
+                
+                String getDate = rs.getString ( "date" );
+                Date sdf = new SimpleDateFormat("yyyy-MM-dd").parse ( getDate );
+                dateChooser.setDate ( sdf );
+                byte[] img = rs.getBytes ( "image" );
+                ImageIcon imageIcon = new ImageIcon (new ImageIcon (img).getImage ().getScaledInstance ( lbl_img.getWidth (), lbl_img.getHeight (), Image.SCALE_SMOOTH ));
+                lbl_img.setIcon ( imageIcon );
+                person_image = img;
+            }
+        }
+        catch (Exception e)
+        {
+             JOptionPane.showMessageDialog ( null, e );
+        }
+    }//GEN-LAST:event_searchTextKeyReleased
+
     /**
      * @param args the command line arguments
      */
@@ -625,6 +743,8 @@ public class Succes extends javax.swing.JFrame
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
@@ -635,6 +755,8 @@ public class Succes extends javax.swing.JFrame
     private javax.swing.JCheckBox python;
     private javax.swing.JButton resetBtn;
     private javax.swing.JButton saveBtn;
+    private javax.swing.JTextField searchText;
+    private javax.swing.JTextField sno;
     private javax.swing.JComboBox<String> subject;
     private javax.swing.JButton updateBtn;
     // End of variables declaration//GEN-END:variables
